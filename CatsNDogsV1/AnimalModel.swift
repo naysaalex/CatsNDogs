@@ -7,8 +7,8 @@
 
 import Foundation
 
-class AnimalModel{
-     var animal = Animal()
+class AnimalModel: ObservableObject{
+     @Published var animal = Animal()
     
     func getAnimal(){//meant to get the data
         let stringUrl = Bool.random() ? catUrl: dogUrl
@@ -36,8 +36,8 @@ class AnimalModel{
                         
                         
                         if let animal = Animal(json: item){
-                            DispatchQueue.main.async{
-                                while animal.imageData == nil {} //put this to give system time to download data
+                            DispatchQueue.main.async{ //takes anything you are trying to run and puts it on the main thread --> only done in apps with one core functionality
+                                while animal.results.isEmpty {} //put this to give system time to download data --> now checking if the result is available
                                 //works like a sleep - checking if it is nil, keep going and as soon as you get something you get out of it
                                 self.animal = animal
                             } //end of dispatch
@@ -51,5 +51,7 @@ class AnimalModel{
             }
         }
         
+        //5. start the data task
+        dataTask.resume()
     }
 }
